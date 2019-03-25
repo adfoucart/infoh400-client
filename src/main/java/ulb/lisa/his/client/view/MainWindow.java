@@ -45,6 +45,8 @@ public class MainWindow extends javax.swing.JFrame {
         personForm = new ulb.lisa.his.view.CreatePersonForm();
         sendADTButton = new javax.swing.JButton();
         adtRspLabel = new javax.swing.JLabel();
+        hl7HostTextField = new javax.swing.JTextField();
+        hl7PortTextField = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         dcmPatientNameField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -75,6 +77,10 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        hl7HostTextField.setText("localhost");
+
+        hl7PortTextField.setText("54321");
+
         javax.swing.GroupLayout patientPanelLayout = new javax.swing.GroupLayout(patientPanel);
         patientPanel.setLayout(patientPanelLayout);
         patientPanelLayout.setHorizontalGroup(
@@ -85,6 +91,10 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(personForm, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
                     .addGroup(patientPanelLayout.createSequentialGroup()
                         .addComponent(sendADTButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(hl7HostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(hl7PortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(adtRspLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -97,10 +107,13 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(personForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(patientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(adtRspLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(patientPanelLayout.createSequentialGroup()
-                        .addComponent(sendADTButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(adtRspLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(patientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sendADTButton)
+                            .addComponent(hl7HostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(hl7PortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -247,7 +260,10 @@ public class MainWindow extends javax.swing.JFrame {
         Patient p = new Patient();
         p.setPerson(per);
         
-        if( HL7Client.send_ADT_A01(p) ){
+        String host = hl7HostTextField.getText();
+        int port = Integer.valueOf(hl7PortTextField.getText());
+        
+        if( HL7Client.send_ADT_A01(p, host, port) ){
             adtRspLabel.setText("ACK Received");
         }
         else{
@@ -329,6 +345,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton fhirSearchButton;
     private javax.swing.JList<String> fhirSearchResultList;
     private javax.swing.JTextField fhirServerHost;
+    private javax.swing.JTextField hl7HostTextField;
+    private javax.swing.JTextField hl7PortTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

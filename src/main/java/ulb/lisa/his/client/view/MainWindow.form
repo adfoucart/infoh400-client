@@ -73,6 +73,10 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="sendADTButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="hl7HostTextField" min="-2" pref="113" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="hl7PortTextField" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="adtRspLabel" min="-2" pref="159" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -88,11 +92,15 @@
                       <Component id="personForm" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="adtRspLabel" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="sendADTButton" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="sendADTButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="hl7HostTextField" min="-2" max="-2" attributes="0"/>
+                                  <Component id="hl7PortTextField" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="adtRspLabel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -111,6 +119,16 @@
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="adtRspLabel">
+            </Component>
+            <Component class="javax.swing.JTextField" name="hl7HostTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="localhost"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="hl7PortTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="54321"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

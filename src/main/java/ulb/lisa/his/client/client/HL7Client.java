@@ -34,7 +34,7 @@ public class HL7Client {
     
     private static int last_seqnumber = 0;
     
-    public static boolean send_ADT_A01(Patient p){
+    public static boolean send_ADT_A01(Patient p, String host, int port){
         try {
             last_seqnumber += 1;
             
@@ -67,7 +67,7 @@ public class HL7Client {
             System.out.println("Encoded message:");
             System.out.println(encodedMsg);
             
-            Connection conn = ctx.newClient("localhost", 1011, false);
+            Connection conn = ctx.newClient(host, port, false);
             Initiator init = conn.getInitiator();
             Message rsp = init.sendAndReceive(adt);
             
