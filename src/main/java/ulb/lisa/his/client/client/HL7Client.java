@@ -35,17 +35,25 @@ public class HL7Client {
     private static int last_seqnumber = 0;
     
     public static boolean send_ADT_A01(Patient p, String host, int port){
+        last_seqnumber += 1;
+        
+        ADT_A01 adt = create_ADT_A01(p);
+        return send_Message(adt, host, port);
+    }
+    
+    public static ADT_A01 create_ADT_A01(Patient p){
         try {
-            last_seqnumber += 1;
-            
+            /*
+                CREATE HL7 ADT^A01 MESSAGE
+            */
             ADT_A01 adt = new ADT_A01();
             adt.initQuickstart("ADT", "A01", "P");
-            
+
             // Populate MSH segment
             MSH msh = adt.getMSH();
             msh.getSendingApplication().getNamespaceID().setValue("HIS-Client");
             msh.getSequenceNumber().setValue(String.valueOf(last_seqnumber));
-            
+
             // Populate PID segment
             PID pid = adt.getPID();
             pid.getPatientName(0).getFamilyName().setValue(p.getPerson().getNameFamily());
@@ -57,15 +65,28 @@ public class HL7Client {
             pid.getDateOfBirth().getTimeOfAnEvent().setValue(dob);
             pid.getSex().setValue(p.getPerson().getGender());
             
+            return adt;
+        } catch (HL7Exception | IOException ex) {
+            Logger.getLogger(HL7Client.class.getName()).log(Level.SEVERE, null, ex); 
+        }
+        
+        return null;
+    }
+    
+    public static boolean send_Message(Message m, String host, int port){
+        try {
+            /*
+                CREATE CONNECTION & SEND MESSAGE
+            */
             HapiContext ctx = new DefaultHapiContext();
             Parser parser = ctx.getPipeParser();
-            String encodedMsg = parser.encode(adt);
+            String encodedMsg = parser.encode(m);
             System.out.println("Encoded message:");
             System.out.println(encodedMsg);
             
             Connection conn = ctx.newClient(host, port, false);
             Initiator init = conn.getInitiator();
-            Message rsp = init.sendAndReceive(adt);
+            Message rsp = init.sendAndReceive(m);
             
             String rspString = parser.encode(rsp);
             System.out.println("Response:");
@@ -74,11 +95,11 @@ public class HL7Client {
             conn.close();
             
             return rsp.getName().equals("ACK");
-        } catch (HL7Exception | IOException | LLPException ex) {
-            Logger.getLogger(HL7Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (HL7Exception | LLPException | IOException ex) {
+            Logger.getLogger(HL7Client.class.getName()).log(Level.SEVERE, null, ex); 
         }
         
-        return false;        
+        return false;
     }
     
 }
