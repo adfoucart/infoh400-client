@@ -54,7 +54,6 @@ public class HL7Client {
             // Date of birth
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             Date dob = p.getPerson().getBirthdate();
-            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             pid.getDateOfBirth().getTimeOfAnEvent().setValue(dob);
             pid.getSex().setValue(p.getPerson().getGender());
             
