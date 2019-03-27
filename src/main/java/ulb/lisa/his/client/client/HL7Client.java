@@ -55,10 +55,7 @@ public class HL7Client {
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             Date dob = p.getPerson().getBirthdate();
             LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            System.out.println(localDob.getYear());
-            System.out.println(localDob.getMonthValue());
-            System.out.println(localDob.getDayOfMonth());
-            pid.getDateOfBirth().getTimeOfAnEvent().setDatePrecision(localDob.getYear(), localDob.getMonthValue(), localDob.getDayOfMonth());
+            pid.getDateOfBirth().getTimeOfAnEvent().setValue(dob);
             pid.getSex().setValue(p.getPerson().getGender());
             
             HapiContext ctx = new DefaultHapiContext();
