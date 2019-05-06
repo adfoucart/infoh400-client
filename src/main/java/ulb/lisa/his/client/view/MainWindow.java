@@ -22,6 +22,9 @@ public class MainWindow extends javax.swing.JFrame {
     DICOMSCU scu = new DICOMSCU();
     ArrayList<Patient> patientsSearchResult = new ArrayList();
     
+    FHIRClient fhirClient = new FHIRClient();
+    ArrayList<org.hl7.fhir.dstu3.model.Patient> fhirPatients = new ArrayList();
+    
     /**
      * Creates new form MainWindow
      */
@@ -63,6 +66,8 @@ public class MainWindow extends javax.swing.JFrame {
         fhirSearchResultList = new javax.swing.JList<>();
         jScrollPane4 = new javax.swing.JScrollPane();
         fhirResultDetailTextArea = new javax.swing.JTextArea();
+        fhirIDSearchTextField = new javax.swing.JTextField();
+        fhirIDGetButton = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -175,11 +180,6 @@ public class MainWindow extends javax.swing.JFrame {
         fhirPane.addTab("PACS", jPanel1);
 
         fhirServerHost.setText("http://fhirtest.uhn.ca/baseDstu3");
-        fhirServerHost.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fhirServerHostActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Patient Name:");
 
@@ -201,6 +201,13 @@ public class MainWindow extends javax.swing.JFrame {
         fhirResultDetailTextArea.setRows(5);
         jScrollPane4.setViewportView(fhirResultDetailTextArea);
 
+        fhirIDGetButton.setText("Get ID");
+        fhirIDGetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fhirIDGetButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -216,10 +223,13 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(patientFhirSearchField)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(fhirSearchButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fhirIDSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fhirIDGetButton)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -231,7 +241,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(patientFhirSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(fhirSearchButton))
+                    .addComponent(fhirSearchButton)
+                    .addComponent(fhirIDSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fhirIDGetButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
@@ -290,17 +302,41 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_moveSelectedStudyButtonActionPerformed
 
     private void fhirSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fhirSearchButtonActionPerformed
-        // TO DO
+        fhirPatients = fhirClient.searchPatientsByName(patientFhirSearchField.getText());
+        
+        PatientListModel pml = new PatientListModel(fhirPatients);
+        fhirSearchResultList.setModel(pml);
+        fhirSearchResultList.repaint();
     }//GEN-LAST:event_fhirSearchButtonActionPerformed
 
     private void fhirSearchResultListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_fhirSearchResultListValueChanged
-        // TO DO
+        if( evt.getValueIsAdjusting() ) return;
+        
+        int idx = fhirSearchResultList.getSelectedIndex();
+        org.hl7.fhir.dstu3.model.Patient p = fhirPatients.get(idx);
+        
+        setPatientInfo(p);
     }//GEN-LAST:event_fhirSearchResultListValueChanged
 
-    private void fhirServerHostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fhirServerHostActionPerformed
-        // TODO add your handling code here
-    }//GEN-LAST:event_fhirServerHostActionPerformed
-
+    private void fhirIDGetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fhirIDGetButtonActionPerformed
+        org.hl7.fhir.dstu3.model.Patient p = fhirClient.getPatientById(fhirIDSearchTextField.getText());
+        
+        setPatientInfo(p);
+    }//GEN-LAST:event_fhirIDGetButtonActionPerformed
+    
+    private void setPatientInfo(org.hl7.fhir.dstu3.model.Patient p){
+        String patientInfo = "Name: "+p.getNameFirstRep().getFamily() + " " + p.getNameFirstRep().getGivenAsSingleString() + "\n";
+        if( p.getAddressFirstRep() != null ){
+            patientInfo += "Address: \n";
+            patientInfo += p.getAddressFirstRep().getPostalCode() + " " + p.getAddressFirstRep().getCity() + "\n";
+        }
+        if( p.getGender() != null ){
+            patientInfo += "Gender: " + p.getGender().getDisplay() + "\n";
+        }
+        
+        fhirResultDetailTextArea.setText(patientInfo);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -340,6 +376,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel adtRspLabel;
     private javax.swing.JTextField dcmPatientNameField;
     private javax.swing.JButton doCFindButton;
+    private javax.swing.JButton fhirIDGetButton;
+    private javax.swing.JTextField fhirIDSearchTextField;
     private javax.swing.JTabbedPane fhirPane;
     private javax.swing.JTextArea fhirResultDetailTextArea;
     private javax.swing.JButton fhirSearchButton;

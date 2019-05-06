@@ -255,11 +255,14 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Component id="jScrollPane4" alignment="0" pref="261" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="fhirSearchButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="fhirIDSearchTextField" min="-2" pref="39" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="fhirIDGetButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane4" pref="261" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -275,6 +278,8 @@
                           <Component id="patientFhirSearchField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fhirSearchButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fhirIDSearchTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fhirIDGetButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -291,9 +296,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="http://fhirtest.uhn.ca/baseDstu3"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fhirServerHostActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="patientFhirSearchField">
             </Component>
@@ -347,6 +349,16 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JTextField" name="fhirIDSearchTextField">
+            </Component>
+            <Component class="javax.swing.JButton" name="fhirIDGetButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Get ID"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fhirIDGetButtonActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
